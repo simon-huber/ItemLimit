@@ -1,0 +1,6 @@
+language: de
+debug: false
+UsePrefix: true
+Prefix: ItemLimit
+PrefixColor: b
+TextColor: 6

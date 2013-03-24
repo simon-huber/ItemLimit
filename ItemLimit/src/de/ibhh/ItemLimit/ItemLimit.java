@@ -3,6 +3,7 @@ package de.ibhh.ItemLimit;
 import de.ibhh.ItemLimit.Exceptions.NotEnabledException;
 import de.ibhh.ItemLimit.Permissions.PermissionsUtility;
 import de.ibhh.ItemLimit.config.ConfigurationHandler;
+import de.ibhh.ItemLimit.listeners.ItemLimitListener;
 import de.ibhh.ItemLimit.logger.LoggerUtility;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +21,7 @@ public class ItemLimit extends JavaPlugin {
     private LoggerUtility loggerUtility = null;
     private ConfigurationHandler configurationHandler = null;
     private PermissionsUtility permissionsUtility = null;
+    private ItemLimitListener itemLimitListener = null;
 
     @Override
     public void onLoad() {
@@ -91,5 +93,16 @@ public class ItemLimit extends JavaPlugin {
             }
         }
         return permissionsUtility;
+    }
+    
+    public ItemLimitListener getItemLimitListener() {
+        if (itemLimitListener == null) {
+            try {
+                itemLimitListener = new ItemLimitListener();
+            } catch (NotEnabledException ex) {
+                Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return itemLimitListener;
     }
 }

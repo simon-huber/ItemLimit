@@ -61,7 +61,7 @@ public class LoggerUtility {
                     this.log("Debug: " + msg);
                 }
             } else {
-                System.out.println(Prefix + msg);
+                System.out.println("[" + Prefix + "]" + msg);
                 Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + " " + TextColor + msg, "Paypassage.log");
                 if (debugfile) {
                     this.log(msg);

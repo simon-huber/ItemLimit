@@ -18,7 +18,6 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.EnderChest;
 
 /**
  *
@@ -28,7 +27,7 @@ public class ItemLimitListener implements Listener {
 
     private ItemLimit plugin;
     private HashMap<Player, Chest> openchests = new HashMap<Player, Chest>();
-    private HashMap<Player, Chest> openenderchests = new HashMap<Player, Chest>();
+    private HashMap<Player, Block> openenderchests = new HashMap<Player, Block>();
     private HashMap<Material, Integer> limitschest = new HashMap<Material, Integer>();
     private HashMap<Material, Integer> limitsEnderchest = new HashMap<Material, Integer>();
 
@@ -86,15 +85,19 @@ public class ItemLimitListener implements Listener {
             if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 final Block eventBlock = event.getClickedBlock();
                 final Player player = event.getPlayer();
+                if (plugin.getConfig().getBoolean("debug")) {
+                    plugin.getLoggerUtility().log("Block type: " + eventBlock.getState().getType(), LoggerUtility.Level.DEBUG);
+                }
                 if (plugin.getConfigHandler().getConfig().getBoolean("limitChest")) {
                     if (eventBlock.getState() instanceof Chest) {
                         plugin.getLoggerUtility().log("limit chest: true", LoggerUtility.Level.DEBUG);
                         openchests.put(player, (Chest) eventBlock.getState());
                     }
-                } else if (plugin.getConfigHandler().getConfig().getBoolean("limitEnderChest")) {
-                    if (eventBlock.getState() instanceof EnderChest) {
+                }
+                if (plugin.getConfigHandler().getConfig().getBoolean("limitEnderChest")) {
+                    if (eventBlock.getState().getType().equals(Material.ENDER_CHEST)) {
                         plugin.getLoggerUtility().log("Limit enderchest: true", LoggerUtility.Level.DEBUG);
-                        openenderchests.put(player, (Chest) eventBlock.getState());
+                        openenderchests.put(player, eventBlock);
                     }
                 }
             }
@@ -105,9 +108,9 @@ public class ItemLimitListener implements Listener {
     public void invClick(InventoryClickEvent event) {
         try {
             Player player = (Player) event.getWhoClicked();
-            plugin.getLoggerUtility().log("Inv click", LoggerUtility.Level.DEBUG);
+            plugin.getLoggerUtility().log("Inv click type: " + event.getInventory().getType().name(), LoggerUtility.Level.DEBUG);
             if (openchests.containsKey(player)) {
-                plugin.getLoggerUtility().log("Player " + player.getName() + " clicked on " + event.getInventory().getType().name() + "!", LoggerUtility.Level.DEBUG);
+                plugin.getLoggerUtility().log("openchest contains!", LoggerUtility.Level.DEBUG);
                 if (event.getInventory().getType().equals(InventoryType.CHEST)) {
                     if (event.getCurrentItem() == null) {
                         return;
@@ -116,15 +119,17 @@ public class ItemLimitListener implements Listener {
                     }
                     if (limitschest.containsKey(event.getCurrentItem().getType())) {
                         if (event.isShiftClick()) {
-                            openchests.get(player).update();
-                            int items_total = (event.getCurrentItem().getAmount()
-                                    + countChest(event.getInventory(), event.getCurrentItem().getType()));
-                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + items_total, LoggerUtility.Level.DEBUG);
-                            if (items_total > limitschest.get(event.getCurrentItem().getType())) {
-                                event.setCancelled(true);
-                                plugin.getLoggerUtility().log(player, "Zu viele Items des Materials in der Kiste, es sind maximal " + limitschest.get(event.getCursor().getType()) + " erlaubt!", LoggerUtility.Level.ERROR);
-                                return;
-                            }
+//                            int items_total = (event.getCurrentItem().getAmount()
+//                                    + countChest(openchests.get(player).getInventory(), event.getCurrentItem().getType()));
+//                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + items_total, LoggerUtility.Level.DEBUG);
+//                            if (items_total > limitschest.get(event.getCurrentItem().getType())) {
+//                                event.setCancelled(true);
+//                                plugin.getLoggerUtility().log(player, "Zu viele Items des Materials in der Kiste, es sind maximal " + limitschest.get(event.getCurrentItem().getType()) + " erlaubt!", LoggerUtility.Level.ERROR);
+//                                return;
+//                            }
+                            event.setCancelled(true);
+                            plugin.getLoggerUtility().log(player, "Funktion ist bei limitierten Items deaktiviert!", LoggerUtility.Level.ERROR);
+                            return;
                         }
                     }
                     if (event.getCursor() != null) {
@@ -138,6 +143,7 @@ public class ItemLimitListener implements Listener {
                                 event.setCursor(null);
                                 event.setCancelled(true);
                                 plugin.getLoggerUtility().log(player, "Funktion ist bei limitierten Items deaktiviert!", LoggerUtility.Level.ERROR);
+                                return;
                             }
                             plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + total, LoggerUtility.Level.DEBUG);
                             if (total > limitschest.get(event.getCursor().getType())) {
@@ -150,31 +156,57 @@ public class ItemLimitListener implements Listener {
                             }
                         }
                     }
-//                    if ((limitschest.containsKey(event.getCurrentItem().getType()))) {
-//                        if (limitschest.get(event.getCurrentItem().getType()) < this.countChest(openchests.get(player.getName()).getInventory(), event.getCurrentItem().getType())) {
-//                            event.setCancelled(true);
-//                            plugin.getLoggerUtility().log(player, "Zu viele Items des Materials in der Kiste", LoggerUtility.Level.ERROR);
-//                            return;
-//                        }
-//                    }
-
-//                    if (((countWrittenBooks(((Chest) this.ChestViewers.get(player)).getInventory()) <= 0) || (!((Chest) this.ChestViewers.get(player)).getInventory().contains(event.getCurrentItem()))) && (countWrittenBooks(((Chest) this.ChestViewers.get(player)).getInventory()) > 0)) {
-//                        if (this.plugin.getConfig().getBoolean("useBookandQuill")) {
-//                            this.plugin.Logger("UseBooksandQuill = true", "Debug");
-//                            if ((!event.getCursor().getType().equals(Material.BOOK_AND_QUILL)) && (!event.getCurrentItem().getType().equals(Material.BOOK_AND_QUILL))) {
-//                                this.plugin.Logger("!event.getCursor().getType().equals(Material.BOOK) || !event.getCurrentItem().getType().equals(Material.BOOK)", "Debug");
-//                                this.plugin.Logger("Item is " + event.getCurrentItem().getType().name(), "Debug");
-//                                this.plugin.PlayerLogger(player, this.plugin.getConfig().getString("Shop.error.wrongItem." + this.plugin.config.language), "Error");
+                }
+            } else if (openenderchests.containsKey(player)) {
+                plugin.getLoggerUtility().log("openenderchest contains!", LoggerUtility.Level.DEBUG);
+                if (event.getInventory().getType().equals(InventoryType.ENDER_CHEST)) {
+                    if (event.getCurrentItem() == null) {
+                        plugin.getLoggerUtility().log("current item == null!", LoggerUtility.Level.DEBUG);
+                        return;
+                    } else if (event.getCurrentItem().getType() == null) {
+                        plugin.getLoggerUtility().log("current item type == null!", LoggerUtility.Level.DEBUG);
+                        return;
+                    }
+                    if (limitsEnderchest.containsKey(event.getCurrentItem().getType())) {
+                        plugin.getLoggerUtility().log("limits contains!", LoggerUtility.Level.DEBUG);
+                        if (event.isShiftClick()) {
+//                            int items_total = (event.getCurrentItem().getAmount()
+//                                    + countChest(event.getInventory(), event.getCurrentItem().getType()));
+//                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + items_total, LoggerUtility.Level.DEBUG);
+//                            if (items_total > limitsEnderchest.get(event.getCurrentItem().getType())) {
 //                                event.setCancelled(true);
+//                                plugin.getLoggerUtility().log(player, "Zu viele Items des Materials in der Kiste, es sind maximal " + limitsEnderchest.get(event.getCurrentItem().getType()) + " erlaubt!", LoggerUtility.Level.ERROR);
+//                                return;
 //                            }
-//                        } else {
-//                            this.plugin.PlayerLogger(player, this.plugin.getConfig().getString("Shop.error.onebook." + this.plugin.config.language), "Error");
-//                            event.setCancelled(true);
-//                        }
-//                    } else if ((event.isShiftClick()) && (countWrittenBooks(((Chest) this.ChestViewers.get(player)).getInventory()) > 0)) {
-//                        this.plugin.PlayerLogger(player, this.plugin.getConfig().getString("Shop.error.onebook." + this.plugin.config.language), "Error");
-//                        event.setCancelled(true);
-//                    }
+                            event.setCancelled(true);
+                            plugin.getLoggerUtility().log(player, "Funktion ist bei limitierten Items deaktiviert!", LoggerUtility.Level.ERROR);
+                            return;
+                        }
+                    }
+                    if (event.getCursor() != null) {
+                        if (limitsEnderchest.containsKey(event.getCursor().getType())) {
+                            int total = 0;
+                            if (event.isLeftClick()) {
+                                total = event.getCursor().getAmount() + countChest(event.getInventory(), event.getCursor().getType());
+                            } else if (event.isRightClick()) {
+                                player.getInventory().addItem(event.getCursor().clone());
+                                player.updateInventory();
+                                event.setCursor(null);
+                                event.setCancelled(true);
+                                plugin.getLoggerUtility().log(player, "Funktion ist bei limitierten Items deaktiviert!", LoggerUtility.Level.ERROR);
+                                return;
+                            }
+                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + total, LoggerUtility.Level.DEBUG);
+                            if (total > limitsEnderchest.get(event.getCursor().getType())) {
+                                player.getInventory().addItem(event.getCursor().clone());
+                                player.updateInventory();
+                                plugin.getLoggerUtility().log(player, "Zu viele Items des Materials in der Kiste, es sind maximal " + limitsEnderchest.get(event.getCursor().getType()) + " erlaubt!", LoggerUtility.Level.ERROR);
+                                event.setCursor(null);
+                                event.setCancelled(true);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -184,19 +216,6 @@ public class ItemLimitListener implements Listener {
     }
 
     private int countChest(Inventory inv, Material material) {
-        int a = 0;
-        for (ItemStack i : inv.getContents()) {
-            if ((i == null)) {
-                continue;
-            } else if (!i.getType().equals(material)) {
-                continue;
-            }
-            a++;
-        }
-        return a;
-    }
-
-    private int countEnderChest(Inventory inv, Material material) {
         int a = 0;
         for (ItemStack i : inv.getContents()) {
             if ((i == null)) {

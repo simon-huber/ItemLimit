@@ -119,6 +119,11 @@ public class ItemLimitListener implements Listener {
                     }
                     if (limitschest.containsKey(event.getCurrentItem().getType())) {
                         if (event.isShiftClick()) {
+//                            if (event.getRawSlot() == event.getSlot()) {
+//                                plugin.getLoggerUtility().log("own inv", LoggerUtility.Level.DEBUG);
+//                            } else {
+//                                return;
+//                            }
 //                            int items_total = (event.getCurrentItem().getAmount()
 //                                    + countChest(openchests.get(player).getInventory(), event.getCurrentItem().getType()));
 //                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + items_total, LoggerUtility.Level.DEBUG);
@@ -133,6 +138,10 @@ public class ItemLimitListener implements Listener {
                         }
                     }
                     if (event.getCursor() != null) {
+//                        if (event.getRawSlot() != event.getSlot()) {
+//                            plugin.getLoggerUtility().log("own inv", LoggerUtility.Level.DEBUG);
+//                            return;
+//                        }
                         if (limitschest.containsKey(event.getCursor().getType())) {
                             int total = 0;
                             if (event.isLeftClick()) {
@@ -170,6 +179,11 @@ public class ItemLimitListener implements Listener {
                     if (limitsEnderchest.containsKey(event.getCurrentItem().getType())) {
                         plugin.getLoggerUtility().log("limits contains!", LoggerUtility.Level.DEBUG);
                         if (event.isShiftClick()) {
+//                            if (event.getRawSlot() == event.getSlot()) {
+//                                plugin.getLoggerUtility().log("own inv", LoggerUtility.Level.DEBUG);
+//                            } else {
+//                                return;
+//                            }
 //                            int items_total = (event.getCurrentItem().getAmount()
 //                                    + countChest(event.getInventory(), event.getCurrentItem().getType()));
 //                            plugin.getLoggerUtility().log("Player " + player.getName() + " items_total: " + items_total, LoggerUtility.Level.DEBUG);
@@ -184,6 +198,10 @@ public class ItemLimitListener implements Listener {
                         }
                     }
                     if (event.getCursor() != null) {
+//                        if (event.getRawSlot() != event.getSlot()) {
+//                            plugin.getLoggerUtility().log("own inv", LoggerUtility.Level.DEBUG);
+//                            return;
+//                        }
                         if (limitsEnderchest.containsKey(event.getCursor().getType())) {
                             int total = 0;
                             if (event.isLeftClick()) {
@@ -223,7 +241,7 @@ public class ItemLimitListener implements Listener {
             } else if (!i.getType().equals(material)) {
                 continue;
             }
-            a++;
+            a = a + i.getAmount();
         }
         return a;
     }

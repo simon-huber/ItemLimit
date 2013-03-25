@@ -39,12 +39,18 @@ public class ItemLimitListener implements Listener {
         while (iter.hasNext()) {
             String next = iter.next();
             plugin.getLoggerUtility().log("Next: " + next, LoggerUtility.Level.DEBUG);
-            String[] id = next.split(":");
+            String[] id = next.split("/-/");
             try {
                 Material material = Material.matchMaterial(id[0]);
                 int count = Integer.parseInt(id[1]);
                 if (material == null) {
                     plugin.getLoggerUtility().log("Adding: null ", LoggerUtility.Level.DEBUG);
+                    try {
+                        material = Material.getMaterial(Integer.parseInt(id[0]));
+                    } catch (Exception e) {
+                    }
+                }
+                if (material == null) {
                     continue;
                 }
                 limitschest.put(material, count);
@@ -59,12 +65,18 @@ public class ItemLimitListener implements Listener {
         while (iter.hasNext()) {
             String next = iter.next();
             plugin.getLoggerUtility().log("Next: " + next, LoggerUtility.Level.DEBUG);
-            String[] id = next.split(":");
+            String[] id = next.split("/-/");
             try {
                 Material material = Material.matchMaterial(id[0]);
                 int count = Integer.parseInt(id[1]);
                 if (material == null) {
                     plugin.getLoggerUtility().log("Adding: null ", LoggerUtility.Level.DEBUG);
+                    try {
+                        material = Material.getMaterial(Integer.parseInt(id[0]));
+                    } catch (Exception e) {
+                    }
+                }
+                if (material == null) {
                     continue;
                 }
                 limitsEnderchest.put(material, count);

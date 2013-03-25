@@ -8,6 +8,6 @@ TextColor: 6
 limitChest: false
 limitEnderChest: true
 ChestIDs:
-- Diamond:100
+- Diamond/-/100
 EnderChestIDs:
-- Diamond:8
+- Diamond/-/8

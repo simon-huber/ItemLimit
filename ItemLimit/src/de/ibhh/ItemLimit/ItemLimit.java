@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -55,6 +56,28 @@ public class ItemLimit extends JavaPlugin {
     @Override
     public void onDisable() {
         super.onDisable(); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void reload(Player player) {
+        try {
+            getLoggerUtility().log(player, "Please wait: Reloading this plugin!", LoggerUtility.Level.WARNING);
+            getUtilities().unloadPlugin("ItemLimit");
+            getUtilities().loadPlugin("ItemLimit");
+            getLoggerUtility().log(player, "Reloaded!", LoggerUtility.Level.INFO);
+        } catch (Exception ex) {
+            Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void reload() {
+        try {
+            getLoggerUtility().log("Please wait: Reloading this plugin!", LoggerUtility.Level.WARNING);
+            getUtilities().unloadPlugin("ItemLimit");
+            getUtilities().loadPlugin("ItemLimit");
+            getLoggerUtility().log("Reloaded!", LoggerUtility.Level.INFO);
+        } catch (Exception ex) {
+            Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<String> getCommand_args() {

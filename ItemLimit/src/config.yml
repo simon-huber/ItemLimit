@@ -1,5 +1,6 @@
 language: de
 debug: false
+debugfile: true
 UsePrefix: true
 Prefix: ItemLimit
 PrefixColor: b

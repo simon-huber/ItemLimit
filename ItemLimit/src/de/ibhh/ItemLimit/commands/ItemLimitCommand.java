@@ -36,14 +36,7 @@ public class ItemLimitCommand implements CommandExecutor {
                                 return true;
                             } else if (args[0].equalsIgnoreCase(plugin.getConfigHandler().getLanguage_config().getString("commands.reload.name"))) {
                                 if (plugin.getPermissionsUtility().checkpermissions(player, plugin.getConfigHandler().getLanguage_config().getString("commands.reload.permission"))) {
-                                    try {
-                                        plugin.getLoggerUtility().log(player, "Please wait: Reloading this plugin!", LoggerUtility.Level.WARNING);
-                                        plugin.getUtilities().unloadPlugin("ItemLimit");
-                                        plugin.getUtilities().loadPlugin("ItemLimit");
-                                        plugin.getLoggerUtility().log(player, "Reloaded!", LoggerUtility.Level.INFO);
-                                    } catch (Exception ex) {
-                                        Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-                                    }
+                                    plugin.reload(player);
                                 }
                                 return true;
                             }
@@ -53,15 +46,8 @@ public class ItemLimitCommand implements CommandExecutor {
                         return false;
                     }
                 } else {
-                    try {
-                        plugin.getLoggerUtility().log("Please wait: Reloading this plugin!", LoggerUtility.Level.WARNING);
-                        plugin.getUtilities().unloadPlugin("ItemLimit");
-                        plugin.getUtilities().loadPlugin("ItemLimit");
-                        plugin.getLoggerUtility().log("Reloaded!", LoggerUtility.Level.INFO);
-                        return true;
-                    } catch (Exception ex) {
-                        Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    plugin.reload();
+                    return true;
                 }
             }
         }

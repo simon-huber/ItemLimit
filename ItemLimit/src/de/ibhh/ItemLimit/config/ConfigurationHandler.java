@@ -83,8 +83,42 @@ public class ConfigurationHandler {
         if (language.equalsIgnoreCase("de")) {
             //permission output
             language_config.addDefault("permission.error", "Wir haben ein Problem! Dies darfst Du nicht machen!");
+            
+            //reload command
+            language_config.addDefault("commands.reload.name", "reload");
+            language_config.addDefault("commands.reload.permission", "ItemLimit.reload");
+            language_config.addDefault("commands.reload.description", "Laedt das Plugin neu");
+            language_config.addDefault("commands.reload.usage", "/ItemLimit reload");
+            //relaod output
+            language_config.addDefault("commands.reload.message", "Neu geladen!");
+            //About
+            language_config.addDefault("commands.about.name", "about");
+            language_config.addDefault("commands.about.permission", "ItemLimit.about");
+            language_config.addDefault("commands.about.description", "Kurze Info ueber das Plugin.");
+            language_config.addDefault("commands.about.usage", "/ItemLimit about");
+            //Help
+            language_config.addDefault("commands.help.name", "help");
+            language_config.addDefault("commands.help.permission", "ItemLimit.help");
+            language_config.addDefault("commands.help.description", "Hilfe des Plugins.");
+            language_config.addDefault("commands.help.usage", "/ItemLimit help");
         } else {
-            language_config.addDefault("permission.error", "we have a problem! You musnt do this!");
+            language_config.addDefault("permission.error", "we have a problem! You are not allowed to do this!");
+            //reload command
+            language_config.addDefault("commands.reload.name", "reload");
+            language_config.addDefault("commands.reload.permission", "ItemLimit.reload");
+            language_config.addDefault("commands.reload.description", "Reloads the plugin.");
+            language_config.addDefault("commands.reload.usage", "/ItemLimit reload");
+            language_config.addDefault("commands.reload.message", "Reloaded!");
+            //About
+            language_config.addDefault("commands.about.name", "about");
+            language_config.addDefault("commands.about.permission", "ItemLimit.about");
+            language_config.addDefault("commands.about.description", "About the plugin.");
+            language_config.addDefault("commands.about.usage", "/ItemLimit about");
+            //Help
+            language_config.addDefault("commands.help.name", "help");
+            language_config.addDefault("commands.help.permission", "ItemLimit.help");
+            language_config.addDefault("commands.help.description", "Help of the plugin");
+            language_config.addDefault("commands.help.usage", "/ItemLimit help");
         }
         try {
             language_config.options().copyDefaults(true);

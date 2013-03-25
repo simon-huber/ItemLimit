@@ -3,3 +3,23 @@ version: 1.0
 main: de.ibhh.ItemLimit.ItemLimit
 author: ibhh
 website: http://dev.ibhh.de
+commands:
+  ItemLimit:
+    description: Help of ItemLimit
+    usage: /ItemLimit
+    alias: /IL
+permissions:
+  ItemLimit.*:
+    description: Gives you all ItemLimit permissions
+    children:
+      ItemLimit.reload: true
+      ItemLimit.help: true
+  ItemLimit.reload:
+    description: Reloads the plugin
+    default: op
+  ItemLimit.help:
+    description: Shows the help
+    default: true
+  ItemLimit.about:
+    description: Short info about the plugin.
+    default: true

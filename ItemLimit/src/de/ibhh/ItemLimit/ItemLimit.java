@@ -2,9 +2,14 @@ package de.ibhh.ItemLimit;
 
 import de.ibhh.ItemLimit.Exceptions.NotEnabledException;
 import de.ibhh.ItemLimit.Permissions.PermissionsUtility;
+import de.ibhh.ItemLimit.Tools.Utilities;
+import de.ibhh.ItemLimit.commands.ItemLimitCommand;
 import de.ibhh.ItemLimit.config.ConfigurationHandler;
 import de.ibhh.ItemLimit.listeners.ItemLimitListener;
 import de.ibhh.ItemLimit.logger.LoggerUtility;
+import de.ibhh.ItemLimit.tabcompleters.ItemLimitCommandTab;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,6 +27,9 @@ public class ItemLimit extends JavaPlugin {
     private ConfigurationHandler configurationHandler = null;
     private PermissionsUtility permissionsUtility = null;
     private ItemLimitListener itemLimitListener = null;
+    private Utilities utilities_reload = null;
+    //CommandList
+    private List<String> Command_args = new ArrayList<String>();
 
     @Override
     public void onLoad() {
@@ -32,10 +40,16 @@ public class ItemLimit extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         plugin = this;
+        //Adding commands
+        Command_args.add("about");
+        Command_args.add("help");
+        Command_args.add("reload");
         getLoggerUtility();
         getConfigHandler().onStart();
         getPermissionsUtility();
         getLoggerUtility().log("ItemLimit loaded.", LoggerUtility.Level.INFO);
+        plugin.getCommand("ItemLimit").setExecutor(new ItemLimitCommand(plugin));
+        plugin.getCommand("ItemLimit").setTabCompleter(new ItemLimitCommandTab(plugin));
     }
 
     @Override
@@ -45,6 +59,10 @@ public class ItemLimit extends JavaPlugin {
 
     public static ItemLimit getPlugin() {
         return plugin;
+    }
+
+    public List<String> getCommand_args() {
+        return Command_args;
     }
 
     /**
@@ -94,7 +112,7 @@ public class ItemLimit extends JavaPlugin {
         }
         return permissionsUtility;
     }
-    
+
     public ItemLimitListener getItemLimitListener() {
         if (itemLimitListener == null) {
             try {
@@ -104,5 +122,12 @@ public class ItemLimit extends JavaPlugin {
             }
         }
         return itemLimitListener;
+    }
+
+    public Utilities getUtilities() {
+        if (utilities_reload == null) {
+            utilities_reload = new Utilities(plugin);
+        }
+        return utilities_reload;
     }
 }

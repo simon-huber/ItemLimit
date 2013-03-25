@@ -28,10 +28,10 @@ import org.bukkit.material.EnderChest;
  */
 public class ItemLimitListener implements Listener {
 
-    private HashMap<String, Block> openchests = new HashMap<>();
-    private HashMap<String, Block> openenderchests = new HashMap<>();
-    private HashMap<Material, Integer> limitschest = new HashMap<>();
-    private HashMap<Material, Integer> limitsEnderchest = new HashMap<>();
+    private HashMap<String, Block> openchests = new HashMap<String, Block>();
+    private HashMap<String, Block> openenderchests = new HashMap<String, Block>();
+    private HashMap<Material, Integer> limitschest = new HashMap<Material, Integer>();
+    private HashMap<Material, Integer> limitsEnderchest = new HashMap<Material, Integer>();
 
     public ItemLimitListener() throws NotEnabledException {
         if (ItemLimit.getPlugin() == null) {

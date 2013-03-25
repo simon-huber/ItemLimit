@@ -23,31 +23,30 @@ public class LoggerUtility {
     private String Prefix;
     private boolean usePrefix;
     public ChatColor PrefixColor, TextColor;
+    private ItemLimit plugin;
 
     public enum Level {
         DEBUG, INFO, SEVERE, WARNING, ERROR;
     }
 
-    public LoggerUtility() throws NotEnabledException {
-        if(ItemLimit.getPlugin() == null) {
-            throw new NotEnabledException("Could not start logger because the plugin is NOT enabled!");
-        }
-        debugfile = ItemLimit.getPlugin().getConfig().getBoolean("debugfile");
-        debug = ItemLimit.getPlugin().getConfig().getBoolean("debug");
-        Prefix = ItemLimit.getPlugin().getConfig().getString("Prefix");
-        usePrefix = ItemLimit.getPlugin().getConfig().getBoolean("UsePrefix");
+    public LoggerUtility(ItemLimit plugin) {
+        this.plugin = plugin;
+        debugfile = plugin.getConfig().getBoolean("debugfile");
+        debug = plugin.getConfig().getBoolean("debug");
+        Prefix = plugin.getConfig().getString("Prefix");
+        usePrefix = plugin.getConfig().getBoolean("UsePrefix");
         loadcolors();
     }
 
     private void loadcolors() {
-        PrefixColor = ChatColor.getByChar(ItemLimit.getPlugin().getConfig().getString("PrefixColor"));
-        TextColor = ChatColor.getByChar(ItemLimit.getPlugin().getConfig().getString("TextColor"));
+        PrefixColor = ChatColor.getByChar(plugin.getConfig().getString("PrefixColor"));
+        TextColor = ChatColor.getByChar(plugin.getConfig().getString("TextColor"));
     }
 
     public void log(String msg, Level TYPE) {
         try {
             if (TYPE.equals(Level.WARNING) || TYPE.equals(Level.ERROR)) {
-                System.err.println("[" + ItemLimit.getPlugin().getName() + "] " + TYPE.name() + ": " + msg);
+                System.err.println("[" + plugin.getName() + "] " + TYPE.name() + ": " + msg);
                 Bukkit.broadcast(PrefixColor + "[" + Prefix + "]" + ChatColor.RED  + " " +  TYPE.name() + ": " + TextColor + msg, "Paypassage.log");
                 if (debugfile) {
                     this.log("Error: " + msg);
@@ -69,7 +68,7 @@ public class LoggerUtility {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[" + ItemLimit.getPlugin().getName() + "] Error: Uncatched Exeption!");
+            System.out.println("[" + plugin.getName() + "] Error: Uncatched Exeption!");
         }
     }
 
@@ -103,14 +102,14 @@ public class LoggerUtility {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("[" + ItemLimit.getPlugin().getName() + "] Error: Uncatched Exeption!");
+            System.out.println("[" + plugin.getName() + "] Error: Uncatched Exeption!");
         }
     }
 
     public void log(String in) {
         Date now = new Date();
         String Stream = now.toString();
-        String path = ItemLimit.getPlugin().getDataFolder().toString() + File.separator + "debugfiles" + File.separator;
+        String path = plugin.getDataFolder().toString() + File.separator + "debugfiles" + File.separator;
         File directory = new File(path);
         directory.mkdirs();
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd 'at' HH");

@@ -20,9 +20,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * @author ibhh
  */
 public class ItemLimit extends JavaPlugin {
-
-    private static ItemLimit plugin = null;
     //Tools
+
     private LoggerUtility loggerUtility = null;
     private ConfigurationHandler configurationHandler = null;
     private PermissionsUtility permissionsUtility = null;
@@ -39,7 +38,6 @@ public class ItemLimit extends JavaPlugin {
     @Override
     public void onEnable() {
         super.onEnable();
-        plugin = this;
         //Adding commands
         Command_args.add("about");
         Command_args.add("help");
@@ -47,18 +45,16 @@ public class ItemLimit extends JavaPlugin {
         getLoggerUtility();
         getConfigHandler().onStart();
         getPermissionsUtility();
+        getItemLimitListener();
+        getUtilities();
         getLoggerUtility().log("ItemLimit loaded.", LoggerUtility.Level.INFO);
-        plugin.getCommand("ItemLimit").setExecutor(new ItemLimitCommand(plugin));
-        plugin.getCommand("ItemLimit").setTabCompleter(new ItemLimitCommandTab(plugin));
+        getCommand("ItemLimit").setExecutor(new ItemLimitCommand(this));
+        getCommand("ItemLimit").setTabCompleter(new ItemLimitCommandTab(this));
     }
 
     @Override
     public void onDisable() {
         super.onDisable(); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public static ItemLimit getPlugin() {
-        return plugin;
     }
 
     public List<String> getCommand_args() {
@@ -72,11 +68,7 @@ public class ItemLimit extends JavaPlugin {
      */
     public LoggerUtility getLoggerUtility() {
         if (loggerUtility == null) {
-            try {
-                loggerUtility = new LoggerUtility();
-            } catch (NotEnabledException ex) {
-                Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            loggerUtility = new LoggerUtility(this);
         }
         return loggerUtility;
     }
@@ -88,11 +80,7 @@ public class ItemLimit extends JavaPlugin {
      */
     public ConfigurationHandler getConfigHandler() {
         if (configurationHandler == null) {
-            try {
-                configurationHandler = new ConfigurationHandler();
-            } catch (NotEnabledException ex) {
-                Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            configurationHandler = new ConfigurationHandler(this);
         }
         return configurationHandler;
     }
@@ -104,29 +92,21 @@ public class ItemLimit extends JavaPlugin {
      */
     public PermissionsUtility getPermissionsUtility() {
         if (permissionsUtility == null) {
-            try {
-                permissionsUtility = new PermissionsUtility();
-            } catch (NotEnabledException ex) {
-                Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            permissionsUtility = new PermissionsUtility(this);
         }
         return permissionsUtility;
     }
 
     public ItemLimitListener getItemLimitListener() {
         if (itemLimitListener == null) {
-            try {
-                itemLimitListener = new ItemLimitListener();
-            } catch (NotEnabledException ex) {
-                Logger.getLogger(ItemLimit.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            itemLimitListener = new ItemLimitListener(this);
         }
         return itemLimitListener;
     }
 
     public Utilities getUtilities() {
         if (utilities_reload == null) {
-            utilities_reload = new Utilities(plugin);
+            utilities_reload = new Utilities(this);
         }
         return utilities_reload;
     }

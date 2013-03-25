@@ -15,16 +15,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 public class ConfigurationHandler {
 
     private YamlConfiguration language_config;
+    private ItemLimit plugin;
 
     /**
      * Creates a new ConfigurationHandler
      *
      * @param plugin Needed for saving configs
      */
-    public ConfigurationHandler() throws NotEnabledException {
-        if (ItemLimit.getPlugin() == null) {
-            throw new NotEnabledException("Could not start logger because the plugin is NOT enabled!");
-        }
+    public ConfigurationHandler(ItemLimit plugin) {
+        this.plugin = plugin;
     }
 
     /**
@@ -41,7 +40,7 @@ public class ConfigurationHandler {
      * @return plugin.getConifg();
      */
     public FileConfiguration getConfig() {
-        return ItemLimit.getPlugin().getConfig();
+        return plugin.getConfig();
     }
 
     /**
@@ -52,14 +51,14 @@ public class ConfigurationHandler {
     public boolean onStart() {
         //loading main config
         try {
-            ItemLimit.getPlugin().getConfig().options().copyDefaults(true);
-            ItemLimit.getPlugin().saveConfig();
-            ItemLimit.getPlugin().reloadConfig();
-            ItemLimit.getPlugin().getLoggerUtility().log("Config loaded", LoggerUtility.Level.DEBUG);
+            plugin.getConfig().options().copyDefaults(true);
+            plugin.saveConfig();
+            plugin.reloadConfig();
+            plugin.getLoggerUtility().log("Config loaded", LoggerUtility.Level.DEBUG);
         } catch (Exception e) {
-            ItemLimit.getPlugin().getLoggerUtility().log("Cannot create config!", LoggerUtility.Level.ERROR);
+            plugin.getLoggerUtility().log("Cannot create config!", LoggerUtility.Level.ERROR);
             e.printStackTrace();
-            ItemLimit.getPlugin().onDisable();
+            plugin.onDisable();
         }
         createLanguageConfig("de");
         return true;
@@ -69,14 +68,14 @@ public class ConfigurationHandler {
      * Creates the language config and added defaults
      */
     private void createLanguageConfig(String language) {
-        File folder = new File(ItemLimit.getPlugin().getDataFolder() + File.separator);
+        File folder = new File(plugin.getDataFolder() + File.separator);
         folder.mkdirs();
-        File configl = new File(ItemLimit.getPlugin().getDataFolder() + File.separator + "language_" + language + ".yml");
+        File configl = new File(plugin.getDataFolder() + File.separator + "language_" + language + ".yml");
         if (!configl.exists()) {
             try {
                 configl.createNewFile();
             } catch (IOException ex) {
-                ItemLimit.getPlugin().getLoggerUtility().log("Couldnt create new config file!", LoggerUtility.Level.ERROR);
+                plugin.getLoggerUtility().log("Couldnt create new config file!", LoggerUtility.Level.ERROR);
             }
         }
         language_config = YamlConfiguration.loadConfiguration(configl);
@@ -125,19 +124,19 @@ public class ConfigurationHandler {
             language_config.save(configl);
         } catch (IOException ex) {
             ex.printStackTrace();
-            ItemLimit.getPlugin().getLoggerUtility().log("Couldnt save language config!", LoggerUtility.Level.ERROR);
+            plugin.getLoggerUtility().log("Couldnt save language config!", LoggerUtility.Level.ERROR);
         }
-        File configfile = new File(ItemLimit.getPlugin().getDataFolder() + File.separator + "language_" + ItemLimit.getPlugin().getConfig().getString("language") + ".yml");
+        File configfile = new File(plugin.getDataFolder() + File.separator + "language_" + plugin.getConfig().getString("language") + ".yml");
         try {
             language_config = YamlConfiguration.loadConfiguration(configfile);
         } catch (Exception e) {
             e.printStackTrace();
-            ItemLimit.getPlugin().getLoggerUtility().log("Couldnt load language config!", LoggerUtility.Level.ERROR);
-            ItemLimit.getPlugin().getConfig().set("language", "en");
-            ItemLimit.getPlugin().saveConfig();
-            ItemLimit.getPlugin().onDisable();
+            plugin.getLoggerUtility().log("Couldnt load language config!", LoggerUtility.Level.ERROR);
+            plugin.getConfig().set("language", "en");
+            plugin.saveConfig();
+            plugin.onDisable();
             return;
         }
-        ItemLimit.getPlugin().getLoggerUtility().log("language config loaded", LoggerUtility.Level.DEBUG);
+        plugin.getLoggerUtility().log("language config loaded", LoggerUtility.Level.DEBUG);
     }
 }

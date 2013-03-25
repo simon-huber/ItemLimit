@@ -1,16 +1,15 @@
 package de.ibhh.ItemLimit.Permissions;
 
-import de.ibhh.ItemLimit.Exceptions.NotEnabledException;
 import de.ibhh.ItemLimit.ItemLimit;
 import de.ibhh.ItemLimit.logger.LoggerUtility;
 import org.bukkit.entity.Player;
 
 public class PermissionsUtility {
+    
+    private ItemLimit plugin;
 
-    public PermissionsUtility() throws NotEnabledException {
-        if (ItemLimit.getPlugin() == null) {
-            throw new NotEnabledException("Could not start logger because the plugin is NOT enabled!");
-        }
+    public PermissionsUtility(ItemLimit plugin) {
+        this.plugin = plugin;
     }
 
     public boolean checkpermissionssilent(Player player, String action) {
@@ -25,7 +24,7 @@ public class PermissionsUtility {
                 return false;
             }
         } catch (Exception e) {
-            ItemLimit.getPlugin().getLoggerUtility().log("Error on checking permissions!", LoggerUtility.Level.ERROR);
+            plugin.getLoggerUtility().log("Error on checking permissions!", LoggerUtility.Level.ERROR);
             e.printStackTrace();
             return false;
         }
@@ -56,11 +55,11 @@ public class PermissionsUtility {
     }
 
     private void sendErrorMessage(Player player, String action) {
-        ItemLimit.getPlugin().getLoggerUtility().log(player, player.getName() + " " + ItemLimit.getPlugin().getConfigHandler().getLanguage_config().getString("permission.error") + " (" + action + ")", LoggerUtility.Level.ERROR);
+        plugin.getLoggerUtility().log(player, player.getName() + " " + plugin.getConfigHandler().getLanguage_config().getString("permission.error") + " (" + action + ")", LoggerUtility.Level.ERROR);
     }
 
     private void sendGeneralErrorMessage(Player player, Exception e) {
-        ItemLimit.getPlugin().getLoggerUtility().log("Error on checking permissions!", LoggerUtility.Level.ERROR);
-        ItemLimit.getPlugin().getLoggerUtility().log(player, "Error on checking permissions!", LoggerUtility.Level.ERROR);
+        plugin.getLoggerUtility().log("Error on checking permissions!", LoggerUtility.Level.ERROR);
+        plugin.getLoggerUtility().log(player, "Error on checking permissions!", LoggerUtility.Level.ERROR);
     }
 }
